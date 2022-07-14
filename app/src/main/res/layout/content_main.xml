@@ -9,14 +9,47 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/activity_main">
 
+    <ImageView
+        android:id="@+id/cloud_image"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/main_image_height"
+        android:background="@color/colorPrimaryDark"
+        android:contentDescription="@string/main_image_content_description"
+        android:src="@drawable/ic_baseline_cloud_download_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RadioGroup
+        android:id="@+id/download_radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/radio_group_margin_top"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cloud_image">
+
+        <RadioButton
+            android:id="@+id/download_glide"
+            style="@style/radio_button_style"
+            android:text="@string/glide_download" />
+
+        <RadioButton
+            android:id="@+id/download_loadapp"
+            style="@style/radio_button_style"
+            android:text="@string/loadapp_download" />
+
+        <RadioButton
+            android:id="@+id/download_retrofit"
+            style="@style/radio_button_style"
+            android:text="@string/retrofit_download" />
+    </RadioGroup>
+
     <com.udacity.LoadingButton
         android:id="@+id/custom_button"
         android:layout_width="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_height="60dp"
         android:layout_margin="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
