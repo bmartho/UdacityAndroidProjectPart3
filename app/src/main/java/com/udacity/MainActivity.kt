@@ -9,6 +9,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
+import android.widget.RadioGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import kotlinx.android.synthetic.main.activity_main.*
@@ -23,6 +25,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var pendingIntent: PendingIntent
     private lateinit var action: NotificationCompat.Action
 
+    private lateinit var download_radio_group: RadioGroup
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -30,20 +34,33 @@ class MainActivity : AppCompatActivity() {
 
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
+        download_radio_group = findViewById(R.id.download_radio_group)
         custom_button.setOnClickListener {
-            download()
+            val url = when (download_radio_group.checkedRadioButtonId) {
+                R.id.download_glide -> URL_GLIDE
+                R.id.download_loadapp -> URL_LOADAPP
+                R.id.download_retrofit -> URL_RETROFIT
+                else -> ""
+            }
+
+            if (url.isEmpty()) {
+                Toast.makeText(this, R.string.no_radio_button_selected, Toast.LENGTH_SHORT).show()
+            } else {
+                download(url)
+            }
         }
     }
 
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+
         }
     }
 
-    private fun download() {
+    private fun download(url: String) {
         val request =
-            DownloadManager.Request(Uri.parse(URL))
+            DownloadManager.Request(Uri.parse(url))
                 .setTitle(getString(R.string.app_name))
                 .setDescription(getString(R.string.app_description))
                 .setRequiresCharging(false)
@@ -56,8 +73,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val URL =
-            "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/master.zip"
+        private const val URL_GLIDE = "https://github.com/bumptech/glide"
+        private const val URL_LOADAPP =
+            "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter"
+        private const val URL_RETROFIT = "https://github.com/square/retrofit"
+
         private const val CHANNEL_ID = "channelId"
     }
 
