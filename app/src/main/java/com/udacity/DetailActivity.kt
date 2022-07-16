@@ -23,6 +23,11 @@ class DetailActivity : AppCompatActivity() {
         statusValue.text = intent.getStringExtra(STATUS_PARAMETER)
 
         button.setOnClickListener {
+            startActivity(
+                Intent(this, MainActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+            )
+
             finish()
         }
     }
