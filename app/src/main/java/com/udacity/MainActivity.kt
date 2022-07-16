@@ -60,10 +60,13 @@ class MainActivity : AppCompatActivity() {
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+            val status = if (id == downloadID) {
+                getString(R.string.status_success)
+            } else {
+                getString(R.string.status_failed)
+            }
 
-            val status = if (id == downloadID) "SUCCESS" else "FAILED"
             val action = buildNotificationAction(status)
-
             val builder = NotificationCompat.Builder(
                 context,
                 CHANNEL_ID
@@ -109,9 +112,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun buildNotificationAction(status: String): NotificationCompat.Action {
-        val intent = Intent(applicationContext, DetailActivity::class.java)
-            .putExtra("fileName", fileName)
-            .putExtra("status", status)
+        val intent = DetailActivity.createIntent(applicationContext, fileName, status)
 
         val pendingIntent = PendingIntent.getActivity(
             applicationContext,
