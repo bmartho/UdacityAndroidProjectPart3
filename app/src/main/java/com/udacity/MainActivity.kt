@@ -23,11 +23,11 @@ import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private var downloadID: Long = 0
     private var fileName: String = ""
     private lateinit var notificationManager: NotificationManager
     private lateinit var download_radio_group: RadioGroup
 
+    private lateinit var downloadManager: DownloadManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -59,11 +59,21 @@ class MainActivity : AppCompatActivity() {
 
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
-            val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
-            val status = if (id == downloadID) {
-                getString(R.string.status_success)
-            } else {
-                getString(R.string.status_failed)
+            val id = intent!!.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+
+            val query = DownloadManager.Query()
+                .setFilterById(id)
+            val cursor = downloadManager.query(query)
+
+            var status = getString(R.string.status_failed)
+            if (cursor.moveToFirst()) {
+                val statusCode = cursor.getInt(
+                    cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
+                )
+
+                if (statusCode == DownloadManager.STATUS_SUCCESSFUL) {
+                    status = getString(R.string.status_success)
+                }
             }
 
             val action = buildNotificationAction(status)
@@ -89,9 +99,8 @@ class MainActivity : AppCompatActivity() {
                 .setAllowedOverMetered(true)
                 .setAllowedOverRoaming(true)
 
-        val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-        downloadID =
-            downloadManager.enqueue(request)// enqueue puts the download request in the queue.
+        downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+        downloadManager.enqueue(request)// enqueue puts the download request in the queue.
     }
 
     private fun createChannel() {
