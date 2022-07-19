@@ -10,6 +10,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.content.withStyledAttributes
 import kotlin.properties.Delegates
 
 class LoadingButton @JvmOverloads constructor(
@@ -25,8 +26,8 @@ class LoadingButton @JvmOverloads constructor(
     private val downloadValueAnimator = ValueAnimator.ofInt(0, 100)
     private val archValueAnimator = ValueAnimator.ofInt(0, 360)
 
-    var downloadProgress = 0f
-    var archProgress = 0f
+    private var downloadProgress = 0f
+    private var archProgress = 0f
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
@@ -35,9 +36,11 @@ class LoadingButton @JvmOverloads constructor(
         typeface = Typeface.create("", Typeface.NORMAL)
     }
 
-    private val defaultColor = ResourcesCompat.getColor(resources, R.color.colorPrimary, null)
-    private val loadingColor = ResourcesCompat.getColor(resources, R.color.colorPrimaryDark, null)
-    private val archColor = ResourcesCompat.getColor(resources, R.color.colorAccent, null)
+    private var defaultColor = 0
+    private var loadingColor = 0
+    private var archColor = 0
+    private var defaultText = ""
+    private var loadingText = ""
 
     private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { p, old, new ->
         when (new) {
@@ -51,6 +54,14 @@ class LoadingButton @JvmOverloads constructor(
     }
 
     init {
+        context.withStyledAttributes(attrs, R.styleable.LoadingButton) {
+            defaultColor = getColor(R.styleable.LoadingButton_backgroundDefaultColor, 0)
+            loadingColor = getColor(R.styleable.LoadingButton_backgroundLoadingColor, 0)
+            archColor = getColor(R.styleable.LoadingButton_archColor, 0)
+            defaultText = getString(R.styleable.LoadingButton_defaultButtonText) ?: ""
+            loadingText = getString(R.styleable.LoadingButton_loadingButtonText) ?: ""
+        }
+
         downloadValueAnimator.apply {
             duration = 4000
             interpolator = LinearInterpolator()
@@ -112,9 +123,9 @@ class LoadingButton @JvmOverloads constructor(
 
     private fun drawText(canvas: Canvas) {
         val label = if (buttonState == ButtonState.Loading) {
-            resources.getString(R.string.button_loading)
+            loadingText
         } else {
-            resources.getString(R.string.button_name)
+            defaultText
         }
         paint.color = ResourcesCompat.getColor(resources, R.color.white, null)
 

@@ -49,8 +49,13 @@
         android:layout_width="0dp"
         android:layout_height="@dimen/button_height"
         android:layout_margin="@dimen/button_margin"
+        app:archColor="@color/colorAccent"
+        app:backgroundDefaultColor="@color/colorPrimary"
+        app:backgroundLoadingColor="@color/colorPrimaryDark"
+        app:defaultButtonText="@string/button_name"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:loadingButtonText="@string/button_loading" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
