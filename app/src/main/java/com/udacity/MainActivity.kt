@@ -52,6 +52,7 @@ class MainActivity : AppCompatActivity() {
                     findViewById<RadioButton>(download_radio_group.checkedRadioButtonId)
                 fileName = radioButton.text.toString()
 
+                custom_button.setState(ButtonState.Loading)
                 download(url)
             }
         }
@@ -59,6 +60,8 @@ class MainActivity : AppCompatActivity() {
 
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
+            custom_button.complete()
+
             val id = intent!!.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
 
             val query = DownloadManager.Query()

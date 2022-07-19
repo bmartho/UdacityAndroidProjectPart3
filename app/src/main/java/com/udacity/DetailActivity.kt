@@ -22,6 +22,10 @@ class DetailActivity : AppCompatActivity() {
         fileNameValue.text = intent.getStringExtra(FILE_NAME_PARAMETER)
         statusValue.text = intent.getStringExtra(STATUS_PARAMETER)
 
+        if (statusValue.text == getString(R.string.status_failed)) {
+            statusValue.setTextColor(getColor(R.color.failStatus))
+        }
+
         button.setOnClickListener {
             startActivity(
                 Intent(this, MainActivity::class.java)

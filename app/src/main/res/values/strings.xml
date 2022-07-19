@@ -23,6 +23,6 @@
     <string name="details_status">Status:</string>
 
     <string name="status_success">Success</string>
-    <string name="status_failed">Failed</string>
+    <string name="status_failed">Fail</string>
     <string name="ok_button">OK</string>
 </resources>
